@@ -41,7 +41,7 @@ public class Deck {
 	}
 	private void loadCardsIntoStack() {
 		Collections.shuffle(unsortedCards);
-		for(int i = 0; i < unsortedCards.size()-1; i++) {
+		for(int i = 0; i < unsortedCards.size(); i++) {
 			deckOfCards.push(unsortedCards.get(i));
 		}
 	}

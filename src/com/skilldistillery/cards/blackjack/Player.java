@@ -7,6 +7,7 @@ public class Player {
 	private double purse; 
 	private String name; 
 	private Hand playerHand; 
+	private Hand SplitHand;
 	private boolean doubleDown;
 	//Constructors
 	public Player() {
@@ -37,6 +38,15 @@ public class Player {
 		}
 		return false;
 	}
+	public void drawCardSplitHand(Card newCard, int handValue) {
+		if(newCard.getSuit().equals(Ranks.ACE.toString())) {
+			if(newCard.getNumber() + handValue > 21) {
+				newCard.setNumber(Ranks.ACE.getSecondaryValue());
+				playerHand.addCard(newCard);
+			}
+		}
+		SplitHand.addCard(newCard);
+	}
 	public void drawCard(Card newCard, int handValue) {
 		if(newCard.getSuit().equals(Ranks.ACE.toString())) {
 			if(newCard.getNumber() + handValue > 21) {
@@ -59,7 +69,12 @@ public class Player {
 		return input; 
 	}
 	public void splitPairs() {
-		
+		SplitHand = new Hand(); 
+		SplitHand.addCard(playerHand.getHand().get(1));
+		this.playerHand.getHand().remove(1);
+	}
+	public Hand getSplitHand() {
+		return this.SplitHand; 
 	}
 	public int  doubleDown(int playerWage, Scanner userInput) {
 		String input; 
@@ -105,6 +120,9 @@ public class Player {
 	}
 	public void resetHand() {
 		playerHand.RemoveHand();
+		if(SplitHand != null) {
+			SplitHand.RemoveHand();
+		}
 	}
 	public void setPlayerHand(Hand playerHand) {
 		this.playerHand = playerHand;
@@ -115,5 +133,12 @@ public class Player {
 			System.out.println(card);
 		}
 		System.out.println("The math friend is: "   + playerHand.HandValue()+"\n");
+	}
+	public void showSplitHand() {
+		System.out.println("===Cards in Split hand===");
+		for(Card  card: SplitHand.getHand()) {
+			System.out.println(card);
+		}
+		System.out.println("The math friend is: "   + SplitHand.HandValue()+"\n");
 	}
 }
