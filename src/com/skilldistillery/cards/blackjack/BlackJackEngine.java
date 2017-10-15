@@ -1,4 +1,10 @@
 package com.skilldistillery.cards.blackjack;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 public class BlackJackEngine implements CardGames{
 	final double INSURANCE_RATE  =.5;
@@ -41,22 +47,28 @@ public class BlackJackEngine implements CardGames{
 			gameDealer.shuffle();
 		}
 		//Beginning of game first deal
+		//PlayerDraws
 		user.drawCard( gameDealer.playerDrawCard(), user.getPlayerHand().HandValue()  );
+		//Dealer Draws
 		gameDealer.houseDraw(gameDealer.handValue());
+		//Player Draws
 		user.drawCard(gameDealer.playerDrawCard(), user.getPlayerHand().HandValue());
-		user.showPlayerHand();
+		//DealerDraws
 		gameDealer.houseDraw(gameDealer.handValue());
-		//Check to see if the Dealer potentially could have 21 on deal and offer insurance
+		user.showPlayerHand();
 		System.out.println("Dealer's top card is: " + gameDealer.TopCard());
 		System.out.println();
 		
-		if(user.getPlayerHand().getHand().get(0).getSuit()== user.getPlayerHand().getHand().get(1).getSuit()) {
+		//Check to see if Split
+		if(user.getPlayerHand().getHand().get(0).getSuit().equals( user.getPlayerHand().getHand().get(1).getSuit())) {
+			//Create new split hand
 			user.splitPairs();
+			// if Player has a split hand activate the interface
+			if(user.getSplitHand() != null) {
+				splitInterface(); 
+			}
 		}
-		// if Player has a split hand activate the interface
-		if(user.getSplitHand() != null) {
-			splitInterface(); 
-		}
+		//Check to see if the Dealer potentially could have 21 on deal and offer insurance
 		if(gameDealer.TopCard().getNumber()== Ranks.ACE.getPrimaryValue()) {
 			System.out.println("The house has a " + gameDealer.TopCard().getSuit() + " " + gameDealer.TopCard().getName()  +" Would you like to buy insurance? y/n");
 			if(user.buyInsurnace(userInput, input)) {
@@ -105,9 +117,17 @@ public class BlackJackEngine implements CardGames{
 			System.out.println("You need to leave. No loitering around here without money.");
 			endGame();
 		}
-		System.out.println("Deal again? ");
-		resetGame();
-		userInput.close();
+		System.out.println("Deal again? y/n ");
+		input = userInput.next().toLowerCase(); 
+		if(input.equals("y")) {
+			System.out.println(gameDealer.getDeckSize());
+			resetGame(); 	
+		}
+		else {
+			System.out.println(gameDealer.getDeckSize());
+			recordAndShow();
+			endGame();
+		}
 	}
 	public boolean dealerHit(int handValue, int playerHandValue) {
 		if(handValue == 21) {
@@ -115,6 +135,9 @@ public class BlackJackEngine implements CardGames{
 		}
 		else if(handValue > 21){
 			return false;
+		}
+		else if(handValue > playerHandValue) {
+			return false; 
 		}
 		else if(handValue <=16 && (handValue < playerHandValue &&(playerHandValue <=21))) {
 			//Hit on 16 below or dealer is less than the Player
@@ -139,9 +162,8 @@ public class BlackJackEngine implements CardGames{
 				"Howdy there Partner! The name is: " + gameDealer.getName() + " welcome to the black jack tables. I have been working up a mighty appetite for dealing friend. ");
 		System.out.println("So cowboy? You need a name! Now tell me what is your name?  " );
 		user.setName(userInput.nextLine());
-		if(loadGame(user.getName())) {
-			user= getPlayer();
-			System.out.println("Ah ha! Back again  " +  user.getName() + " Its the  accent  ain't it.  Welcome back.");
+		if(loadGame()) {
+			System.out.println("Ah ha! Back again  " +  user.getName() + " Its the  accent  ain't it? Nah, well the tables are always hot. Welcome back.");
 		}
 		else {
 			System.out.println("Well it is pleasure to  meet you " +  user.getName() + " now that we are acquainted. I feel obliged to give you 100 on the house for your first time");
@@ -162,34 +184,34 @@ public class BlackJackEngine implements CardGames{
 			else {
 				System.out.println("To bad you didn't get the insurance. But, that is okay I have never been a fan of finance and banks too");
 			}
-			resetGame();
+//			resetGame();
 		}
 		else if(gameDealer.handValue() == 21 && gameDealer.handValue() == user.getPlayerHand().HandValue()) {
 			System.out.println("Looks like the house works in mysterious ways");
-			resetGame();
+//			resetGame();
 		}
 		else if(gameDealer.handValue() == user.getPlayerHand().HandValue()){
 			System.out.println("When push comes to shove the house gets its way");
 //			user.setPurse(user.getPurse() +playerWager);
-			resetGame();
+//			resetGame();
 		}
 		else if(gameDealer.handValue() > 21) {
 			System.out.println("Ain't that something? Don't s'pose you have them river fairy's helping ya. ");
 			user.setPurse(user.getPurse()+ (playerWager * ODDS));
 			HouseBank -= playerWager *ODDS;
-			resetGame();
+//			resetGame();
 		}
 		else if(gameDealer.handValue() > user.getPlayerHand().HandValue() && (gameDealer.handValue() <= 21)) {
 			System.out.println("The house wins fair and square partner good luck next time. ");
 //			user.setPurse(user.getPurse() - playerWager);
 			HouseBank +=playerWager;
-			resetGame();
+//			resetGame();
 		}
 		else if(user.getPlayerHand().HandValue() > gameDealer.handValue() && (user.getPlayerHand().HandValue() <=21)) {
 			System.out.println("Coming into the lions den and winning like that. Impressive");
 			user.setPurse(user.getPurse() + (playerWager * ODDS));
 			HouseBank -= playerWager;
-			resetGame();
+//			resetGame();
 		}
 	}
 	public void splitInterface() {
@@ -217,6 +239,26 @@ public class BlackJackEngine implements CardGames{
 			return;
 		}
 	}
+	public void recordAndShow() {
+		userInput.close();
+		System.out.println("It was a pleasure to have you here with us " + user.getName());
+		if(saveGame()) {
+			System.out.println("Your can come back anytime and your purse will be: " + user.getPurse() );
+			System.out.println("==Record vs the House==");
+			if(user.getPurse() < 100) {
+				System.out.println("You have lost: $" + (100 - user.getPurse()));
+			}
+			else if(user.getPurse() == 100){
+				System.out.println("Ultimately you get to walk away with out having lost anything 4" + (user.getPurse() - 100));
+			}
+			else {
+				System.out.println("Goodness Gracious! You are walking out of here with $" + ((user.getPurse() - 100) + user.getPurse()) + " off the house and in your pocket.");
+			}
+		}
+		else {
+			System.out.println("Unable to save your progress. You can come back and get another $100 on the house");
+		}
+	}
 	@Override
 	public void resetGame() {
 		user.resetHand();
@@ -230,11 +272,59 @@ public class BlackJackEngine implements CardGames{
 	}
 	@Override
 	public boolean saveGame() {
+		//Clean name and remove emptySpaces
+		String cleanName = cleanNameForFile();
+		File playerSave = new File("playerSaves/" +cleanName+".txt");
+		FileWriter fw = null; 
+		BufferedWriter bw = null; 
+		try {
+	       fw = new FileWriter(playerSave.getAbsolutePath());
+	       bw = new BufferedWriter(fw); 
+	      bw.write(user.getName() + "-" + user.getPurse() + "-" + HouseBank);
+	      bw.close();
+	      return true; 
+	  }
+	  catch (IOException e) {
+	      System.err.println(e.getMessage());
+	  }
 		return false; 
 	}
+	public String cleanNameForFile() {
+		char[] cleanNameArray = user.getName().toCharArray();
+		String cleanName = "";
+		for(int i = 0; i < cleanNameArray.length; i++ ) {
+			if(cleanNameArray[i] == ' ') {
+				cleanNameArray[i]  = '_';
+			}
+			cleanName +=cleanNameArray[i];
+		}
+		return cleanName; 
+	}
 	@Override
-	public boolean loadGame(String name) {
-		return false;
+	public boolean loadGame() {
+		String[] playerData = null;
+		String cleanName = cleanNameForFile();
+		
+		try{
+			FileReader fileName = new FileReader("playerSaves/"+ cleanName+".txt");
+			BufferedReader in = new BufferedReader(fileName);
+			String line;
+            while (( line= in.readLine()) != null) {
+            		playerData = line.split("-");
+                }
+            user.setName(playerData[0]);
+            user.setPurse(Double.parseDouble(playerData[1]));
+            HouseBank = Integer.parseInt(playerData[2]);
+            in.close();
+            return true; 
+            }
+        catch (IOException e) {
+        	System.out.println("New Player: " + user.getName());
+        	return false; 
+        }
+	}
+	public boolean playerExists() {
+		return false; 
 	}
 	@Override
 	public Player getPlayer() {

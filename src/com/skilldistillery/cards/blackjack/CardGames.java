@@ -5,6 +5,6 @@ public void startGame();
 public void endGame(); 
 public void resetGame();
 public boolean saveGame(); 
-public boolean loadGame(String name); 
+public boolean loadGame(); 
 public Player getPlayer();
 }

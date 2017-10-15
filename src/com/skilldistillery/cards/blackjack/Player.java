@@ -42,10 +42,15 @@ public class Player {
 		if(newCard.getSuit().equals(Ranks.ACE.toString())) {
 			if(newCard.getNumber() + handValue > 21) {
 				newCard.setNumber(Ranks.ACE.getSecondaryValue());
-				playerHand.addCard(newCard);
+				SplitHand.addCard(newCard);
+			}
+			else {
+				SplitHand.addCard(newCard);
 			}
 		}
-		SplitHand.addCard(newCard);
+		else {
+			SplitHand.addCard(newCard);
+		}
 	}
 	public void drawCard(Card newCard, int handValue) {
 		if(newCard.getSuit().equals(Ranks.ACE.toString())) {
@@ -53,8 +58,13 @@ public class Player {
 				newCard.setNumber(Ranks.ACE.getSecondaryValue());
 				playerHand.addCard(newCard);
 			}
+			else {
+				playerHand.addCard(newCard);
+			}
 		}
-		playerHand.addCard(newCard);
+		else {
+			playerHand.addCard(newCard);			
+		}
 	}
 	public boolean buyInsurnace(Scanner userInput, String input){
 		input =   userInput.next().toLowerCase();

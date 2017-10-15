@@ -18,7 +18,7 @@ public class Dealer {
 			"Walter Barnes \"the Doctor\""};
 	private String name; 
 	private Hand dealerHand =   new Hand();
-	private Deck cardDeck =   new Deck();
+	private ThreeDeckShoe cardDeck =   new ThreeDeckShoe();
 	
 	public Dealer() {
 		int randomNumber = (int) (Math.random() * PossibleDealerNames.length -1); 
@@ -29,6 +29,9 @@ public class Dealer {
 		if(newCard.getSuit().equals(Ranks.ACE.toString())) {
 			if(newCard.getNumber() + handValue > 21) {
 				newCard.setNumber(Ranks.ACE.getSecondaryValue());
+				dealerHand.addCard(newCard);
+			}
+			else {
 				dealerHand.addCard(newCard);
 			}
 		}
