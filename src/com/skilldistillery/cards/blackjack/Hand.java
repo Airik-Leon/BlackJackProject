@@ -10,6 +10,26 @@ public class Hand {
 	public void addCard(Card newCard) {
 		currentCards.add(newCard);
 	}
+	public void bestHand() {
+		int totalAces = 0; 
+		for(int i = 0; i < currentCards.size(); i++) {
+			if(currentCards.get(i).getSuit().equals(Ranks.ACE.toString())) {
+				totalAces +=1; 
+			}
+		}
+		if(totalAces <= 1) {
+			//means good hand
+		}
+		else {
+			int count = 0; 
+			for(int i = 0; i < currentCards.size(); i++) {
+				if((currentCards.get(i).getNumber() + count > 21  && currentCards.get(i).getSuit().equals(Ranks.ACE.toString()))){
+					count+=currentCards.get(i).getNumber();
+					currentCards.get(i).setNumber(Ranks.ACE.getSecondaryValue());
+				}
+			}
+		}
+	}
 	public void RemoveHand() {
 		currentCards = new LinkedList<>(); 
 	}

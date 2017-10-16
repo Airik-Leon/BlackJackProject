@@ -68,6 +68,7 @@ public class Dealer {
 		for(Card  card: dealerHand.getHand()) {
 			System.out.println(card);
 		}
+		System.out.println("=================");
 		System.out.println("Dealer has: "  + dealerHand.HandValue());
 		System.out.println();
 	}

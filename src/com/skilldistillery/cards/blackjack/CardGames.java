@@ -6,5 +6,4 @@ public void endGame();
 public void resetGame();
 public boolean saveGame(); 
 public boolean loadGame(); 
-public Player getPlayer();
 }

@@ -28,22 +28,26 @@ public class ThreeDeckShoe extends Deck {
 	public void createDeck() {
 		for(int suit = 0; suit< 4; suit++) {
 			for( int rank = 0; rank<=12; rank++) {
-				card = new Card(Suits.values()[suit].toString(), Ranks.values()[rank].getPrimaryValue(),Ranks.values()[rank].toString());
+				card = new Card(Suits.values()[suit].toString(),
+						Ranks.values()[rank].getPrimaryValue(),Ranks.values()[rank].toString(),Suits.values()[suit].getUnicode());
 				unsortedCards.add(card);
 			}
 		}
 		for(int suit = 0; suit< 4; suit++) {
 			for( int rank = 0; rank<=12; rank++) {
-				 card = new Card(Suits.values()[suit].toString(), Ranks.values()[rank].getPrimaryValue(),Ranks.values()[rank].toString());
+				card = new Card(Suits.values()[suit].toString(),
+						Ranks.values()[rank].getPrimaryValue(),Ranks.values()[rank].toString(),Suits.values()[suit].getUnicode());
 				unsortedCards.add(card);
 			}
 		}
 		for(int suit = 0; suit< 4; suit++) {
 			for( int rank = 0; rank<=12; rank++) {
-				 card = new Card(Suits.values()[suit].toString(), Ranks.values()[rank].getPrimaryValue(),Ranks.values()[rank].toString());
+				card = new Card(Suits.values()[suit].toString(),
+						Ranks.values()[rank].getPrimaryValue(),Ranks.values()[rank].toString(),Suits.values()[suit].getUnicode());
 				unsortedCards.add(card);
 			}
 		}
+
 		loadCardsIntoStack();
 	}
 	protected void loadCardsIntoStack() {

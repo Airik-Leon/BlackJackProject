@@ -4,13 +4,15 @@ public class Card {
 	private String name; 
 	private String suit; 
 	private int number; 
+	private char unicode; 
 	public Card() {
 		
 	}
-	public Card(String name, int number, String suit) {
+	public Card(String name, int number, String suit, char unicode) {
 		this.name = name; 
 		this.number = number; 
 		this.suit = suit; 
+		this.unicode =unicode; 
 	}
 	public String getName() {
 		return name;
@@ -33,13 +35,9 @@ public class Card {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Card [name=");
-		builder.append(name);
-		builder.append(", suit=");
 		builder.append(suit);
-		builder.append(", number=");
-		builder.append(number);
-		builder.append("]");
+		builder.append(" of " + name);
+		builder.append(" " + number + " " +  unicode);
 		return builder.toString();
 	}
 	
