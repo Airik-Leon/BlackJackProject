@@ -37,8 +37,6 @@ public class Card {
 		StringBuilder builder = new StringBuilder();
 		builder.append(suit);
 		builder.append(" of " + name);
-		builder.append(" " + number + " " +  unicode);
 		return builder.toString();
 	}
-	
 }

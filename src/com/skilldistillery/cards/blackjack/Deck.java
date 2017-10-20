@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Stack;
 
 public class Deck {
-	private ArrayList<Card> unsortedCards; 
-	private Stack<Card> deckOfCards; 
-	private Stack<Card> discardedCards; 
-	Card card; 
+	protected ArrayList<Card> unsortedCards; 
+	protected Stack<Card> deckOfCards; 
+	protected Stack<Card> discardedCards; 
+	protected Card card; 
 	
 	public Deck() {
 		unsortedCards = new  ArrayList<>(50);
@@ -26,9 +26,7 @@ public class Deck {
 		this.deckOfCards = deckOfCards;
 	}
 	public Card drawACard() {
-		Card newCard    = deckOfCards.pop();
-		discardedCards.push(newCard);
-		return newCard;
+		return card = discardedCards.push(deckOfCards.pop());
 	}
 	public void createDeck() {
 		for(int suit = 0; suit< 4; suit++) {
@@ -39,6 +37,9 @@ public class Deck {
 			}
 		}
 		loadCardsIntoStack();
+	}
+	public Card deckTopCard() {
+		return deckOfCards.peek();
 	}
 	protected void loadCardsIntoStack() {
 		Collections.shuffle(unsortedCards);

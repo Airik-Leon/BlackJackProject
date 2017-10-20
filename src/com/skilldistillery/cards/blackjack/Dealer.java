@@ -18,11 +18,15 @@ public class Dealer {
 			"Walter Barnes \"the Doctor\""};
 	private String name; 
 	private Hand dealerHand =   new Hand();
-	private ThreeDeckShoe cardDeck =   new ThreeDeckShoe();
+	private Deck cardDeck = new Deck();
+//	private ThreeDeckShoe cardDeck =   new ThreeDeckShoe();
 	
 	public Dealer() {
 		int randomNumber = (int) (Math.random() * PossibleDealerNames.length -1); 
 		this.name = PossibleDealerNames[randomNumber]; 
+	}
+	public Deck getSingleDeck() {
+		return this.cardDeck;
 	}
 	public void houseDraw(int handValue) {
 		Card newCard = cardDeck.drawACard();
